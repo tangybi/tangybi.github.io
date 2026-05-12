@@ -1,0 +1,10 @@
+/* 让你的搜索框更显眼一点 */
+.VPNavBarSearchButton {
+  --docsearch-primary-color: #3451b2; /* 修改主题色 */
+}
+.VPNavBarSearchButton {
+  width: 100% !important;/* 加宽搜索框 */
+  max-width: 420px; /* 限制最大宽度 */
+  min-width: 200px ;
+  border-radius: 12px; /* 圆角 */
+}
