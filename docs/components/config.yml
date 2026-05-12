@@ -1,0 +1,22 @@
+
+  music:
+    base_url: https://cdn.allberry.cn/
+    suffix: mp3
+    files:
+      - file: SomebodyThatIUsedToKnow
+        title: Somebody That I Used to Know
+        artist: Gotye
+      - file: TheUntamed-album
+        title: The Untamed (OST)
+        artist: 林海
+      - file: Lueur
+        title: Lueur
+        artist: Yannick Lowack
+      - file: Intra
+        title: Intra
+        artist: Jonas Hain
+      - file: tenderness
+        title: tenderness
+        artist: Elia Lo Monaco
+
+

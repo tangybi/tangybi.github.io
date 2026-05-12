@@ -1,5 +1,7 @@
 {
   "devDependencies": {
+    "@rollup/plugin-yaml": "^4.1.2",
+    "markdown-it-mathjax3": "^4.3.2",
     "vitepress": "^2.0.0-alpha.17"
   },
   "scripts": {
