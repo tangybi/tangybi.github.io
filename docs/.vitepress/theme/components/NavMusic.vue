@@ -6,27 +6,31 @@
   >
     <button
       class="nav-music-btn"
-      :class="{ active: show }"
+      :class="{ active: show, playing: isPlaying }"
       @click="show = !show"
-      title="音乐播放器"
+      :title="isPlaying ? '正在播放' : '音乐播放器'"
     >
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" :class="{ 'icon-playing': isPlaying }">
         <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
       </svg>
     </button>
 
     <Transition name="popup">
       <div v-show="show" class="nav-music-popup">
-        <Music />
+        <Music ref="musicRef" from="nav"/>
       </div>
     </Transition>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const show = ref(false)
+const musicRef = ref(null)
+
+const isPlaying = computed(() => musicRef.value?.isPlaying ?? false)
+
 </script>
 
 <style scoped>
@@ -72,6 +76,19 @@ const show = ref(false)
 .popup-leave-to {
   opacity: 0;
   transform: translateY(-4px);
+}
+
+/* 播放状态动画 */
+.nav-music-btn.playing {
+  opacity: 1;
+  color: var(--vp-c-brand-1, #7bc67e);
+}
+.icon-playing {
+  animation: icon-beat 1.2s ease-in-out infinite;
+}
+@keyframes icon-beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
 }
 
 

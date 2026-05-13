@@ -4,7 +4,7 @@
       v-for="(post, index) in posts"
       :key="index"
       class="post-card"
-      @click="$router.push(post.link)"
+      @click="goToPost(post.link)"
     >
       <div class="post-body">
         <h3 class="post-title">{{ post.title }}</h3>
@@ -17,6 +17,10 @@
           <span class="meta-item">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/></svg>
             <span>{{ post.category }}</span>
+          </span>
+          <span v-if="post.readingTime" class="meta-item">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            <span>{{ post.readingTime }} 分钟</span>
           </span>
         </div>
 
@@ -37,12 +41,22 @@
 </template>
 
 <script setup>
-defineProps({
+import { useRouter } from 'vitepress'
+
+const router = useRouter()
+
+const props = defineProps({
   posts: {
     type: Array,
     default: () => [],
   },
 })
+
+function goToPost(link) {
+  if (link) {
+    router.go(link)
+  }
+}
 </script>
 
 <style scoped>
@@ -52,7 +66,7 @@ defineProps({
   gap: 16px;
 }
 .post-card {
-  background: #fff;
+  background: var(--vp-c-bg-soft);
   border-radius: 14px;
   padding: 18px;
   display: flex;
@@ -73,7 +87,7 @@ defineProps({
   margin: 0 0 8px;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #222;
+  color: var(--text-primary);
   line-height: 1.4;
 }
 .post-meta {
@@ -82,7 +96,7 @@ defineProps({
   gap: 14px;
   margin-bottom: 8px;
   font-size: 0.78rem;
-  color: #999;
+  color: var(--text-dim);
 }
 .meta-item {
   display: inline-flex;
@@ -92,7 +106,7 @@ defineProps({
 .post-desc {
   margin: 0 0 10px;
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 .post-tags {
@@ -102,7 +116,7 @@ defineProps({
 }
 .tag {
   font-size: 0.78rem;
-  color: #7bc67e;
+  color: var(--accent);
   font-weight: 500;
 }
 .post-thumb {
@@ -112,7 +126,7 @@ defineProps({
 .thumb-placeholder {
   width: 90px;
   height: 90px;
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  background: linear-gradient(135deg, var(--accent-soft), var(--border-color));
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -121,7 +135,7 @@ defineProps({
 .thumb-text {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #4caf50;
+  color: var(--accent-dark);
   text-align: center;
   line-height: 1.3;
   padding: 4px;

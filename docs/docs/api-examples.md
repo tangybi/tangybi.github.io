@@ -1,4 +1,9 @@
 ---
+title: Runtime API Examples
+lastUpdated: true
+date: 2026-05-13
+category: examples
+tags: ['API', 'VitePress']
 outline: deep
 ---
 

@@ -7,6 +7,7 @@ import Music from '../../components/Music.vue'
 import CategoryCard from '../../components/CategoryCard.vue'
 import TagCard from '../../components/TagCard.vue'
 import PostList from '../../components/PostList.vue'
+import RadarChart from '../../components/RadarChart.vue'
 
 export default {
   extends: DefaultTheme,
@@ -16,5 +17,6 @@ export default {
     app.component('CategoryCard', CategoryCard)
     app.component('TagCard', TagCard)
     app.component('PostList', PostList)
+    app.component('RadarChart', RadarChart)
   }
 } satisfies Theme

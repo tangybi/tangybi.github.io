@@ -40,11 +40,11 @@ const visibleTags = computed(() =>
 
 <style scoped>
 .tag-card {
-  background: #f7f5eb;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 10px;
-  margin-top: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  margin: 10px 0;
+  box-shadow: 0 2px 8px var(--card-shadow);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 .card-header {
@@ -56,7 +56,7 @@ const visibleTags = computed(() =>
 .accent-bar {
   width: 4px;
   height: 18px;
-  background: #7bc67e;
+  background: var(--accent);
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -64,7 +64,7 @@ const visibleTags = computed(() =>
   margin: 0;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #222;
+  color: var(--text-primary);
 }
 .tag-list {
   display: flex;
@@ -72,8 +72,8 @@ const visibleTags = computed(() =>
   gap: 8px;
 }
 .tag-pill {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
   font-size: 0.8rem;
   padding: 4px 12px;
   border-radius: 14px;
@@ -82,13 +82,13 @@ const visibleTags = computed(() =>
   line-height: 1.4;
 }
 .tag-pill:hover {
-  background: #7bc67e;
+  background: var(--accent);
   color: #fff;
 }
 .more-btn {
   background: none;
   border: none;
-  color: #7bc67e;
+  color: var(--accent);
   font-size: 0.82rem;
   cursor: pointer;
   padding: 10px 0 0;

@@ -1,9 +1,8 @@
 <template>
-  <div class="music-widget">
-    <div class="music-title">音乐</div>
+  <div class="music-widget" :class="{ playing: isPlaying }">
 
     <div class="track-area">
-      <img class="cover" :src="currentTrack.cover" alt="cover" />
+      <img class="cover"  :src="currentTrack.cover" alt="cover" :style="{ transform: 'rotate(' + rotationAngle + 'deg)' }" />
       <div class="info">
         <p class="title" :title="currentTrack.title">{{ currentTrack.title }}</p>
         <p class="artist">{{ currentTrack.artist }}</p>
@@ -71,193 +70,87 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useMusicStore } from './useMusicStore'
 
-// 从 config.yml 中读取音乐配置，按 "Artist - Title.ext" 格式解析
-// 如果文件名不含 " - "，则视为仅有歌名，艺术家默认为 "Unknown"
-import configYaml from './config.yml'
-
-
-function buildPlaylist() {
-  const music = configYaml.music || configYaml
-  const base_url = music.base_url || ''
-  const suffix = music.suffix || 'mp3'
-  const files = music.files || []
-
-  return files.map((item) => {
-    // 支持对象格式 { file, title, artist } 和旧版纯字符串格式
-    const filename = typeof item === 'string' ? item : (item.file || '')
-    const src = `${base_url}${filename}.${suffix}`
-    let title, artist
-    if (typeof item === 'object' && item.title) {
-      title = item.title
-      artist = item.artist || 'Unknown'
-    } else {
-      title = filename
-      artist = 'Unknown'
-    }
-    return {
-      title,
-      artist,
-      cover: `https://picsum.photos/seed/${encodeURIComponent(filename)}/200/200`,
-      src,
-      lyrics: [],
-    }
-  })
-}
-
-const playlist = ref(buildPlaylist())
-
-const currentIndex = ref(0)
-const currentTrack = computed(() => playlist.value[currentIndex.value])
-const isPlaying = ref(false)
-const currentTime = ref(0)
-const duration = ref(0)
-const volume = ref(0.8)
-const showPlaylist = ref(false)
-const showLyrics = ref(false)
-const loopMode = ref('all') // 'one' | 'all' | 'shuffle'
-
-const loopTitle = computed(() => {
-  switch (loopMode.value) {
-    case 'one': return '单曲循环'
-    case 'shuffle': return '随机播放'
-    default: return '列表循环'
-  }
+const props = defineProps({
+  from: {
+    type: String,
+    default: '',
+  },
 })
 
-const audioCache = new Map()
-let audio = null
+const {
+  playlist,
+  currentIndex,
+  currentTrack,
+  isPlaying,
+  currentTime,
+  duration,
+  volume,
+  loopMode,
+  rotationAngle,
+  loopTitle,
+  progressPercent,
+  currentLyrics,
+  togglePlay,
+  prev,
+  next,
+  seek,
+  toggleMute,
+  toggleLoopMode,
+  playFromList,
+  formatTime,
+  isActiveLyric,
+  mountAudio,
+  unmountAudio,
+} = useMusicStore()
 
-function onLoadedMetadata() {
-  duration.value = audio?.duration || 0
-}
-function onTimeUpdate() {
-  currentTime.value = audio?.currentTime || 0
-}
-function initAudio() {
-  if (audio) {
-    audio.pause()
-    audio.removeEventListener('loadedmetadata', onLoadedMetadata)
-    audio.removeEventListener('timeupdate', onTimeUpdate)
-    audio.removeEventListener('ended', onTrackEnded)
-  }
-  const src = currentTrack.value.src
-  if (audioCache.has(src)) {
-    audio = audioCache.get(src)
-    audio.currentTime = 0
-  } else {
-    audio = new Audio(src)
-    audioCache.set(src, audio)
-  }
-  audio.volume = volume.value
-  audio.addEventListener('loadedmetadata', onLoadedMetadata)
-  audio.addEventListener('timeupdate', onTimeUpdate)
-  audio.addEventListener('ended', onTrackEnded)
-}
-
-function togglePlay() {
-  if (!audio) initAudio()
-  if (audio.paused) { audio.play().then(() => { isPlaying.value = true }).catch(() => {}) }
-  else { audio.pause(); isPlaying.value = false }
-}
-
-function onTrackEnded() {
-  if (loopMode.value === 'one') {
-    resetPlayer()
-  } else if (loopMode.value === 'shuffle') {
-    shuffleNext()
-  } else {
-    // 'all' — 列表循环
-    currentIndex.value = (currentIndex.value + 1) % playlist.value.length
-    resetPlayer()
-  }
-}
-
-function toggleLoopMode() {
-  if (loopMode.value === 'one') loopMode.value = 'all'
-  else if (loopMode.value === 'all') loopMode.value = 'shuffle'
-  else loopMode.value = 'one'
-}
-
-function shuffleNext() {
-  let nextIndex
-  do {
-    nextIndex = Math.floor(Math.random() * playlist.value.length)
-  } while (nextIndex === currentIndex.value && playlist.value.length > 1)
-  currentIndex.value = nextIndex
-  resetPlayer()
-}
-
-function prev() { currentIndex.value = (currentIndex.value - 1 + playlist.value.length) % playlist.value.length; resetPlayer() }
-function next() {
-  if (loopMode.value === 'shuffle') { shuffleNext(); return }
-  currentIndex.value = (currentIndex.value + 1) % playlist.value.length
-  resetPlayer()
-}
-function playFromList(index) { currentIndex.value = index; resetPlayer() }
-
-function resetPlayer() {
-  currentTime.value = 0; duration.value = 0; isPlaying.value = false
-  if (audio) { audio.pause() }
-  initAudio(); togglePlay()
-}
-
-const progressPercent = computed(() => duration.value === 0 ? 0 : (currentTime.value / duration.value) * 100)
-
-function seek(e) {
-  if (!audio || duration.value === 0) return
-  const rect = e.currentTarget.getBoundingClientRect()
-  audio.currentTime = ((e.clientX - rect.left) / rect.width) * duration.value
-}
-
-function updateVolume() { if (audio) audio.volume = volume.value }
-
-function formatTime(t) {
-  if (!t || isNaN(t)) return '0:00'
-  const m = Math.floor(t / 60); const s = Math.floor(t % 60)
-  return `${m}:${s.toString().padStart(2, '0')}`
-}
-
-const currentLyrics = computed(() => currentTrack.value.lyrics || [])
-
-function isActiveLyric(index) {
-  const line = currentLyrics.value[index]; const nextLine = currentLyrics.value[index + 1]
-  if (!line) return false
-  const t = currentTime.value
-  return t >= line.time && (!nextLine || t < nextLine.time)
-}
-
-function toggleMute() {
-  volume.value = volume.value === 0 ? 0.8 : 0
-  updateVolume()
-}
+const showPlaylist = ref(false)
+const showLyrics = ref(false)
 
 function togglePlaylist() { showPlaylist.value = !showPlaylist.value; if (showPlaylist.value) showLyrics.value = false }
 function toggleLyrics() { showLyrics.value = !showLyrics.value; if (showLyrics.value) showPlaylist.value = false }
 
-onMounted(() => { initAudio() })
-onUnmounted(() => {
-  audioCache.forEach(a => a.pause())
-  audioCache.clear()
-  if (audio) { audio.pause(); audio = null }
-})
+onMounted(() => { mountAudio() })
+onUnmounted(() => { unmountAudio() })
+
+// nav 小图标动态
+defineExpose({ isPlaying })
 </script>
 
 <style scoped>
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes border-flow {
+  to { --angle: 360deg; }
+}
 .music-widget {
-  /* margin: 10px auto; */
-  background: #f7f5eb;
+  border: 3px solid transparent;
+  box-shadow: 0 2px 12px var(--card-shadow);
+  position: relative;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 20px;
-  color: #222;
+  color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: box-shadow 0.3s;
+  z-index: 0;
+}
+.music-widget.playing {
+  border: 3px solid transparent;
+  background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+              conic-gradient(from var(--angle, 0deg), var(--accent), transparent 30%, transparent 70%, var(--accent)) border-box;
+  animation: border-flow 3s linear infinite;
+  box-shadow: 0 2px 16px var(--accent-shadow);
 }
 .music-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #222;
+  color: var(--text-primary);
   margin-bottom: 16px;
   letter-spacing: 0.02em;
 }
@@ -273,7 +166,11 @@ onUnmounted(() => {
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px var(--cover-shadow);
+  transition: box-shadow 0.3s;
+}
+.cover.playing {
+  box-shadow: 0 2px 12px var(--accent-shadow);
 }
 .info {
   flex: 1;
@@ -283,7 +180,7 @@ onUnmounted(() => {
   margin: 0;
   font-weight: 700;
   font-size: 1.05rem;
-  color: #222;
+  color: var(--text-primary);
   line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -292,7 +189,7 @@ onUnmounted(() => {
 .info .artist {
   margin: 2px 0 0;
   font-size: 0.82rem;
-  color: #888;
+  color: var(--text-muted);
 }
 .time-volume-row {
   display: flex;
@@ -302,22 +199,22 @@ onUnmounted(() => {
 }
 .time {
   font-size: 0.75rem;
-  color: #999;
+  color: var(--text-dim);
 }
 .volume-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: #999;
+  color: var(--text-dim);
   padding: 2px;
   display: inline-flex;
   align-items: center;
   transition: color 0.15s;
 }
-.volume-btn:hover { color: #555; }
+.volume-btn:hover { color: var(--control-hover); }
 .progress-bar {
   height: 4px;
-  background: #e5e3d9;
+  background: var(--border-color);
   border-radius: 2px;
   cursor: pointer;
   overflow: hidden;
@@ -325,13 +222,13 @@ onUnmounted(() => {
 }
 .progress {
   height: 100%;
-  background: #7bc67e;
+  background: var(--accent);
   border-radius: 2px;
   transition: width 0.1s linear;
 }
 .divider {
   height: 1px;
-  background: #e5e3d9;
+  background: var(--border-color);
   margin-bottom: 12px;
 }
 .controls {
@@ -342,7 +239,7 @@ onUnmounted(() => {
 .ctrl-btn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--control-color);
   cursor: pointer;
   padding: 6px;
   display: inline-flex;
@@ -350,10 +247,10 @@ onUnmounted(() => {
   justify-content: center;
   transition: color 0.15s;
 }
-.ctrl-btn:hover { color: #222; }
-.ctrl-btn.active { color: #7bc67e; }
+.ctrl-btn:hover { color: var(--control-hover); }
+.ctrl-btn.active { color: var(--accent); }
 .play-btn {
-  background: #7bc67e;
+  background: var(--accent);
   border: none;
   border-radius: 50%;
   width: 48px;
@@ -364,14 +261,14 @@ onUnmounted(() => {
   cursor: pointer;
   color: #fff;
   transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 2px 8px rgba(123,198,126,0.3);
+  box-shadow: 0 2px 8px var(--accent-shadow);
 }
 .play-btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 14px rgba(123,198,126,0.4);
+  box-shadow: 0 4px 14px var(--accent-shadow);
 }
 .playlist, .lyrics-panel {
-  background: #efede3;
+  background: var(--card-bg-light);
   border-radius: 10px;
   padding: 12px;
   max-height: 200px;
@@ -381,7 +278,7 @@ onUnmounted(() => {
 .playlist h4 {
   margin: 0 0 8px;
   font-size: 0.85rem;
-  color: #888;
+  color: var(--text-muted);
   font-weight: 600;
 }
 .playlist ul { list-style: none; margin: 0; padding: 0; }
@@ -390,19 +287,19 @@ onUnmounted(() => {
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.82rem;
-  color: #444;
+  color: var(--text-secondary);
   transition: background 0.15s;
 }
-.playlist li:hover { background: #e3e1d7; }
-.playlist li.active { background: #7bc67e; color: #fff; font-weight: 500; }
+.playlist li:hover { background: var(--border-color); }
+.playlist li.active { background: var(--accent); color: #fff; font-weight: 500; }
 .lyrics-content p {
   margin: 6px 0;
   font-size: 0.82rem;
-  color: #888;
+  color: var(--text-muted);
   transition: all 0.2s;
 }
 .lyrics-content p.active {
-  color: #7bc67e;
+  color: var(--accent);
   font-weight: 600;
   font-size: 0.92rem;
 }

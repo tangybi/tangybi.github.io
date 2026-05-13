@@ -8,3 +8,71 @@
   min-width: 200px ;
   border-radius: 12px; /* 圆角 */
 }
+
+/* ===== 自定义组件 CSS 变量 ===== */
+:root {
+  /* 卡片背景 */
+  --card-bg: #f7f5eb;
+  --card-bg-light: #efede3;
+  --card-shadow: rgba(0,0,0,0.06);
+  --card-shadow-hover: rgba(0,0,0,0.08);
+
+  /* 文字颜色 */
+  --text-primary: #222;
+  --text-secondary: #666;
+  --text-muted: #888;
+  --text-dim: #999;
+
+  /* 强调色 */
+  --accent: #7bc67e;
+  --accent-rgb: 123, 198, 126;
+  --accent-soft: #e8f5e9;
+  --accent-dark: #4caf50;
+  --accent-deep: #2e7d32;
+  --accent-shadow: rgba(123,198,126,0.3);
+
+  /* 边框 / 分割线 */
+  --border-color: #e5e3d9;
+  --border-subtle: #eee;
+
+  /* 控件 */
+  --control-color: #666;
+  --control-hover: #222;
+
+  /* 封面 */
+  --cover-shadow: rgba(0,0,0,0.08);
+
+  /* SVG / 雷达图 */
+  --radar-grid: #ddd;
+  --radar-label: #666;
+}
+
+html.dark {
+  --card-bg: #242428;
+  --card-bg-light: #2e2e34;
+  --card-shadow: rgba(0,0,0,0.2);
+  --card-shadow-hover: rgba(0,0,0,0.3);
+
+  --text-primary: #e0e0e0;
+  --text-secondary: #aaa;
+  --text-muted: #999;
+  --text-dim: #777;
+
+  --accent: #7bc67e;
+  --accent-rgb: 123, 198, 126;
+  --accent-soft: #1e3a20;
+  --accent-dark: #66bb6a;
+  --accent-deep: #a5d6a7;
+  --accent-shadow: rgba(123,198,126,0.4);
+
+  --border-color: #3a3a40;
+  --border-subtle: #333;
+
+  --control-color: #999;
+  --control-hover: #e0e0e0;
+
+  --cover-shadow: rgba(0,0,0,0.3);
+
+  --radar-grid: #444;
+  --radar-label: #aaa;
+}
