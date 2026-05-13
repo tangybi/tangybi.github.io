@@ -126,14 +126,33 @@ const loopTitle = computed(() => {
   }
 })
 
+const audioCache = new Map()
 let audio = null
 
+function onLoadedMetadata() {
+  duration.value = audio?.duration || 0
+}
+function onTimeUpdate() {
+  currentTime.value = audio?.currentTime || 0
+}
 function initAudio() {
-  if (audio) { audio.pause(); audio.src = '' }
-  audio = new Audio(currentTrack.value.src)
+  if (audio) {
+    audio.pause()
+    audio.removeEventListener('loadedmetadata', onLoadedMetadata)
+    audio.removeEventListener('timeupdate', onTimeUpdate)
+    audio.removeEventListener('ended', onTrackEnded)
+  }
+  const src = currentTrack.value.src
+  if (audioCache.has(src)) {
+    audio = audioCache.get(src)
+    audio.currentTime = 0
+  } else {
+    audio = new Audio(src)
+    audioCache.set(src, audio)
+  }
   audio.volume = volume.value
-  audio.addEventListener('loadedmetadata', () => { duration.value = audio.duration || 0 })
-  audio.addEventListener('timeupdate', () => { currentTime.value = audio.currentTime })
+  audio.addEventListener('loadedmetadata', onLoadedMetadata)
+  audio.addEventListener('timeupdate', onTimeUpdate)
   audio.addEventListener('ended', onTrackEnded)
 }
 
@@ -180,7 +199,7 @@ function playFromList(index) { currentIndex.value = index; resetPlayer() }
 
 function resetPlayer() {
   currentTime.value = 0; duration.value = 0; isPlaying.value = false
-  if (audio) { audio.pause(); audio.src = '' }
+  if (audio) { audio.pause() }
   initAudio(); togglePlay()
 }
 
@@ -218,7 +237,11 @@ function togglePlaylist() { showPlaylist.value = !showPlaylist.value; if (showPl
 function toggleLyrics() { showLyrics.value = !showLyrics.value; if (showLyrics.value) showPlaylist.value = false }
 
 onMounted(() => { initAudio() })
-onUnmounted(() => { if (audio) { audio.pause(); audio.src = ''; audio = null } })
+onUnmounted(() => {
+  audioCache.forEach(a => a.pause())
+  audioCache.clear()
+  if (audio) { audio.pause(); audio = null }
+})
 </script>
 
 <style scoped>

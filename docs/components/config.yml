@@ -18,5 +18,38 @@
       - file: tenderness
         title: tenderness
         artist: Elia Lo Monaco
+      - file: liangzhu-lv
+        title: 梁祝 - 吕思清
+        artist: 吕思清
+      - file: Canon
+        title: Canon
+        artist: 帕赫贝尔
+      - file: dayu
+        title: 大鱼
+        artist: 
+      - file: Wedding in a Dream
+        title: 梦中的婚礼
+        artist: 理查德克莱德曼
+      - file: A Comme Amour
+        title: 秋日的私语
+        artist: 理查德克莱德曼
+      - file: xingkong
+        title: 星空
+        artist: 理查德克莱德曼
+      - file: tenderMondschein-Sonate Presto agitatoness
+        title: Mondschein-Sonate Presto agitato
+        artist: 贝多芬
+      - file: Kiss the Rain
+        title: 雨的印记
+        artist: 
+      - file: Always with me
+        title: Always with me
+        artist: 久石让
+      - file: Summer
+        title: Summer
+        artist: 久石让
+      - file: Summer
+        title: Summer
+        artist: 久石让
 
 
