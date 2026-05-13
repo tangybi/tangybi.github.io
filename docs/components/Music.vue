@@ -5,7 +5,7 @@
     <div class="track-area">
       <img class="cover" :src="currentTrack.cover" alt="cover" />
       <div class="info">
-        <p class="title">{{ currentTrack.title }}</p>
+        <p class="title" :title="currentTrack.title">{{ currentTrack.title }}</p>
         <p class="artist">{{ currentTrack.artist }}</p>
         <div class="time-volume-row">
           <span class="time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
@@ -285,6 +285,9 @@ onUnmounted(() => {
   font-size: 1.05rem;
   color: #222;
   line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .info .artist {
   margin: 2px 0 0;

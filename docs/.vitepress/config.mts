@@ -6,8 +6,8 @@ export default defineConfig({
   vite: {
     plugins: [yaml()],
   },
-  title: "My Awesome Project",
-  description: "A VitePress Site",
+  title: "Awesome",
+  description: "A VitePress ",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

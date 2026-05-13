@@ -64,5 +64,9 @@ hero:
   .home-left {
     display: none;
   }
+  .home-right {
+    width: 100%;
+    min-width: none;
+  }
 }
 </style>
