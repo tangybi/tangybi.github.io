@@ -9,7 +9,7 @@ import os
 # ============ 配置 ============
 WIDTH = 1200
 HEIGHT = 630
-SITE_URL = 'https://tangybi.github.io'
+SITE_URL = 'https://allberry.cn'
 
 # 配色
 BG_COLOR = (255, 255, 255)       # 白底

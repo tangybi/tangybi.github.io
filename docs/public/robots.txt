@@ -5,4 +5,5 @@ Allow: /
 # 禁止爬取构建缓存
 Disallow: /.vitepress/
 
-Sitemap: https://tangybi.github.io/sitemap.xml
+# 站点地图（使用自定义域名）
+Sitemap: https://allberry.cn/sitemap.xml

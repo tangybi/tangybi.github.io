@@ -1,7 +1,10 @@
 import { defineConfig } from 'vitepress'
 import yaml from '@rollup/plugin-yaml'
 
-const siteUrl = 'https://tangybi.github.io'
+// ====== 站点配置 ======
+// 注意：CNAME 文件中配置了自定义域名 allberry.cn
+// 所有 SEO 链接必须使用该域名，不能用 github.io 后缀
+const siteUrl = 'https://allberry.cn'
 const siteTitle = 'tyb 的博客'
 const siteDescription = '个人技术博客，分享 Python、算法、数据结构、TypeScript 等编程知识，记录学习与成长。'
 
@@ -16,6 +19,7 @@ export default defineConfig({
 
   // ====== 核心 SEO ======
   title: siteTitle,
+  titleTemplate: `:title | ${siteTitle}`,
   description: siteDescription,
   lang: 'zh-CN',
 
@@ -29,6 +33,27 @@ export default defineConfig({
 
   // ====== 每个页面自动使用 lastUpdated ======
   lastUpdated: true,
+
+  // ====== 每页自动添加 canonical URL ======
+  transformPageData(pageData) {
+    let rawPath = pageData.relativePath  // 例如 "index.md" 或 "docs/api-examples.md"
+    // 处理首页: "index.md" -> ""，其他: "docs/foo.md" -> "docs/foo/"
+    if (rawPath === 'index.md') {
+      rawPath = ''
+    } else {
+      rawPath = rawPath.replace(/\.md$/, '/')
+    }
+    const canonicalUrl = rawPath === ''
+      ? siteUrl
+      : `${siteUrl}/${rawPath}`
+    const canonicalLink = {
+      rel: 'canonical',
+      href: canonicalUrl,
+    }
+    // 插入到 head 最前面
+    pageData.frontmatter.head ??= []
+    pageData.frontmatter.head.unshift(['link', canonicalLink])
+  },
 
   head: [
     // 基础
@@ -66,6 +91,12 @@ export default defineConfig({
         inLanguage: 'zh-CN',
       }),
     ],
+
+    // 百度站点验证（用于百度搜索收录，请替换为实际验证码）
+    // ['meta', { name: 'baidu-site-verification', content: '请替换为百度站长平台验证码' }],
+
+    // Google Search Console 验证（用于 Google 搜索收录，请替换为实际验证码）
+    // ['meta', { name: 'google-site-verification', content: '请替换为 Google Search Console 验证码' }],
   ],
 
   themeConfig: {
