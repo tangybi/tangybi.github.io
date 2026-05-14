@@ -1,9 +1,9 @@
 ---
 title: Runtime API Examples
-lastUpdated: true
+description: VitePress 运行时 API 使用示例，展示 useData 等 API 在 .md 和 .vue 文件中的用法。
 date: 2026-05-13
-category: examples
-tags: ['API', 'VitePress']
+category: 
+tags: []
 outline: deep
 ---
 

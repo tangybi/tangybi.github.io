@@ -1,17 +1,33 @@
 ---
-title: Markdown Extension Examples
-date: 2026-01-15
-category: examples
-tags: ['Markdown', 'VitePress']
+title: 人生苦短，我学Python
+description: Python 编程学习笔记，涵盖基本语法、数据结构和算法，跟随北大陈斌课程与 hello-algo 学习。
+date: 2026-05-13
+category: python
+tags: ['Python', 'DSA']
 ---
 
-# Markdown Extension Examples
+# 写在前面
 
-This page demonstrates some of the built-in markdown extensions provided by VitePress.
+AI当立的今天，我要重新开始古法编程！
 
-## Syntax Highlighting
+我会首先从python基本语法入手，然后进入数据结构和算法篇章，最后可能会有一些实战小项目
 
-VitePress provides Syntax Highlighting powered by [Shiki](https://github.com/shikijs/shiki), with additional features like line-highlighting:
+站在巨人的肩膀上会走的更快一些。课程跟随：北大陈斌数据结构与算法Python版，同时参考hello-algo网站及其PDF[hello-algo](https://www.hello-algo.com)。计划2周完成！
+
+
+## 基本数据类型
+
+  string、
+
+
+## 复杂数据类型
+
+## 数据结构
+
+### 复杂度&大O分析法
+
+### 链表
+
 
 **Input**
 

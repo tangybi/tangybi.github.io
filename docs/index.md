@@ -2,17 +2,20 @@
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
+title: tyb 的博客 - Python / 算法 / TypeScript
+description: 个人技术博客，分享 Python 编程、数据结构与算法、TypeScript 开发等原创内容，记录学习成长之路。
+
 hero:
-  name: "Awesome"
-  text: "A VitePress Site"
-  tagline: Welcome
-#   actions:
-#     - theme: brand
-#       text: Markdown Examples
-#       link: /markdown-examples
-#     - theme: alt
-#       text: API Examples
-#       link: /api-examples
+  name: "tyb 的博客"
+  text: "古法编程 · 持续学习"
+  tagline: 分享 Python、算法、数据结构、TypeScript 等编程知识与实践经验
+  actions:
+    - theme: brand
+      text: 📖 最新文章
+      link: /docs/markdown-examples
+    - theme: alt
+      text: 🗂️ 算法合集
+      link: /docs/merge-sort
 
 
 ---
