@@ -104,24 +104,57 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '文档', link: '/docs/markdown-examples' },
-      { text: '算法', link: '/docs/merge-sort' },
     ],
 
     sidebar: [
       {
-        text: '文档',
+        text: 'AI Agents',
         items: [
-          { text: 'Markdown 示例', link: '/docs/markdown-examples' },
-          { text: 'Runtime API 示例', link: '/docs/api-examples' },
-          { text: '实用小工具', link: '/docs/tools' },
+          { text: 'hello agnets', link: '/docs/Agents/hello-agents' },
+        ]
+      },
+      {
+        text: 'AI框架',
+        items: [
+        ]
+      },
+      {
+        text: 'AI辅助',
+        items: [
+          { text: 'Skills', link: '/docs/Agents/skills' },
+        ]
+      },
+      {
+        text: 'AI应用',
+        items: [
+          { text: '实用小工具', link: '/docs/Agents/tools' },
         ]
       },
       {
         text: '算法与数据结构',
         items: [
-          { text: '归并排序', link: '/docs/merge-sort' },
+          { text: '归并排序', link: '/docs/DSA/merge-sort' },
+          { text: 'H100', link: '/docs/DSA/h100' },
         ]
       },
+      {
+        text: '408',
+        items: [
+          { text: '静态资源CDN', link: '/docs/408/cdn' },
+          { text: '缓存', link: '/docs/408/cache' },
+        ]
+      },
+      {
+        text: 'Vue3',
+        items: [
+            { text: 'Vue3 新特性', link: '/docs/Vue3/3' },
+        ]
+      },
+      {
+        text: 'TypeScript',
+        items: [
+          { text: 'TypeScript 6.0 新特性', link: '/docs/TS/6' },]
+      }
     ],
 
     // 社交链接

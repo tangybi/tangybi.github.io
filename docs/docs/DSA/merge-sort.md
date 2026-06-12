@@ -12,7 +12,7 @@ outline: deep
 归并排序是一种高效的、稳定的排序算法，采用 **分而治之（Divide and Conquer）** 的策略。
 
 <script setup>
-import MergeSortVisualization from '../components/MergeSortVisualization.vue'
+import MergeSortVisualization from '../../components/MergeSortVisualization.vue'
 </script>
 
 ## 🎮 可视化演示

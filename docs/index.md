@@ -23,12 +23,12 @@ hero:
 <script setup>
 import { computed } from 'vue'
 
-// 动态加载 docs 目录下所有 markdown 文件
+// 动态加载 docs 目录下所有 markdown 文件（含子目录）
 const filesPrefix = 'docs'
-const postModules = import.meta.glob('/docs/*.md', { eager: true })
+const postModules = import.meta.glob('/docs/**/*.md', { eager: true })
 
 // 同时加载原始 markdown 内容用于计算阅读时长
-const rawModules = import.meta.glob('/docs/*.md', { eager: true, query: '?raw', import: 'default' })
+const rawModules = import.meta.glob('/docs/**/*.md', { eager: true, query: '?raw', import: 'default' })
 
 // 计算阅读时长（分钟）
 function calcReadingTime(text) {
@@ -43,7 +43,8 @@ function calcReadingTime(text) {
 
 const posts = computed(() => {
   return Object.entries(postModules).map(([path, module]) => {
-    const filename = path.split('/').pop().replace(/\.md$/, '')
+    const relativePath = path.replace('/docs/', '').replace(/\.md$/, '')
+    const filename = relativePath.split('/').pop()
     const fm = module.__pageData.frontmatter || {}
     // 计算阅读时长
     const rawContent = rawModules[path] || ''
@@ -54,10 +55,12 @@ const posts = computed(() => {
       category: fm.category || '',
       tags: fm.tags || [],
       description: fm.description || '',
-      link: `/${filesPrefix}/${filename}`,
+      visible: fm.visible !== false, // 默认可见，设为 false 则隐藏
+      link: `/docs/${relativePath}`,
       readingTime,
     }
-  }).sort((a, b) => {
+  }).filter(p => p.visible) // 过滤掉不可见的文章
+  .sort((a, b) => {
     // 按日期排序，最新的在前
     if (a.date && b.date) return b.date.localeCompare(a.date)
     return 0
