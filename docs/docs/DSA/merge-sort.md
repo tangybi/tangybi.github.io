@@ -3,7 +3,6 @@ title: 归并排序 (Merge Sort)
 description: 归并排序算法详解，包含 Python 和 TypeScript 代码实现、可视化动画演示、复杂度分析和分治思想讲解。
 date: 2026-05-14
 category: algorithms
-tags: ['算法', '排序', 'Python', 'TypeScript']
 outline: deep
 ---
 

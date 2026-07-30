@@ -81,7 +81,7 @@ const isPlaying = computed(() => musicRef.value?.isPlaying ?? false)
 /* 播放状态动画 */
 .nav-music-btn.playing {
   opacity: 1;
-  color: var(--vp-c-brand-1, #7bc67e);
+  color: var(--vp-c-brand-1, #a78bfa);
 }
 .icon-playing {
   animation: icon-beat 1.2s ease-in-out infinite;

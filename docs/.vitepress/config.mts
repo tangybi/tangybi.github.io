@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import yaml from '@rollup/plugin-yaml'
+import { sidebar } from './sidebar'
 
 // ====== 站点配置 ======
 // 注意：CNAME 文件中配置了自定义域名 allberry.cn
@@ -106,56 +107,8 @@ export default defineConfig({
       { text: '文档', link: '/docs/markdown-examples' },
     ],
 
-    sidebar: [
-      {
-        text: 'AI Agents',
-        items: [
-          { text: 'hello agnets', link: '/docs/Agents/hello-agents' },
-        ]
-      },
-      {
-        text: 'AI框架',
-        items: [
-        ]
-      },
-      {
-        text: 'AI辅助',
-        items: [
-          { text: 'Skills', link: '/docs/Agents/skills' },
-        ]
-      },
-      {
-        text: 'AI应用',
-        items: [
-          { text: '实用小工具', link: '/docs/Agents/tools' },
-        ]
-      },
-      {
-        text: '算法与数据结构',
-        items: [
-          { text: '归并排序', link: '/docs/DSA/merge-sort' },
-          { text: 'H100', link: '/docs/DSA/h100' },
-        ]
-      },
-      {
-        text: '408',
-        items: [
-          { text: '静态资源CDN', link: '/docs/408/cdn' },
-          { text: '缓存', link: '/docs/408/cache' },
-        ]
-      },
-      {
-        text: 'Vue3',
-        items: [
-            { text: 'Vue3 新特性', link: '/docs/Vue3/3' },
-        ]
-      },
-      {
-        text: 'TypeScript',
-        items: [
-          { text: 'TypeScript 6.0 新特性', link: '/docs/TS/6' },]
-      }
-    ],
+    sidebar,
+
 
     // 社交链接
     socialLinks: [

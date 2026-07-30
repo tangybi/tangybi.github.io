@@ -2,7 +2,7 @@
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
-title: tyb 的博客 - Python / 算法 / TypeScript
+title: tyb 的博客 
 description: 个人技术博客，分享 Python 编程、数据结构与算法、TypeScript 开发等原创内容，记录学习成长之路。
 
 hero:
@@ -10,18 +10,30 @@ hero:
   text: "古法编程 · 持续学习"
   tagline: 分享 Python、算法、数据结构、TypeScript 等编程知识与实践经验
   actions:
-    - theme: brand
-      text: 📖 最新文章
-      link: /docs/markdown-examples
-    - theme: alt
-      text: 🗂️ 算法合集
-      link: /docs/merge-sort
-
 
 ---
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { sidebar } from './.vitepress/sidebar'
+
+// 从 sidebar 配置中提取所有文章链接（支持分组和扁平两种结构）
+function extractSidebarLinks(items) {
+  const links = []
+  for (const entry of items) {
+    if (entry.items) {
+      // 分组结构: { text, items: [{ text, link }] }
+      for (const item of entry.items) {
+        if (item.link) links.push(item.link)
+      }
+    } else if (entry.link) {
+      // 扁平结构: { text, link }
+      links.push(entry.link)
+    }
+  }
+  return links
+}
+const sidebarLinks = extractSidebarLinks(sidebar)
 
 // 动态加载 docs 目录下所有 markdown 文件（含子目录）
 const filesPrefix = 'docs'
@@ -60,11 +72,21 @@ const posts = computed(() => {
       readingTime,
     }
   }).filter(p => p.visible) // 过滤掉不可见的文章
+  .filter(p => sidebarLinks.includes(p.link)) // 只保留在 sidebar 路由配置中的文章
   .sort((a, b) => {
     // 按日期排序，最新的在前
     if (a.date && b.date) return b.date.localeCompare(a.date)
     return 0
   })
+})
+
+// 当前选中的分类（空字符串 = 全部）
+const selectedCategory = ref('')
+
+// 按分类筛选后的文章列表
+const filteredPosts = computed(() => {
+  if (!selectedCategory.value) return posts.value
+  return posts.value.filter(p => p.category === selectedCategory.value)
 })
 
 // 从所有文章中提取分类并统计数量
@@ -105,9 +127,15 @@ const radarDimensions = computed(() => {
   }
 
   // 2. 平均字数（中文字数 + 英文单词数）
-  const rawContents = Object.values(rawModules).filter(Boolean)
+  // 只统计在 sidebar 路由中的文章
+  const filteredPaths = new Set(posts.value.map(p => {
+    // link 形如 /docs/DSA/merge-sort，还原为路径 /docs/DSA/merge-sort.md
+    const link = p.link
+    return link.startsWith('/docs/') ? link + '.md' : ''
+  }))
   let totalChars = 0
-  for (const content of rawContents) {
+  for (const [path, content] of Object.entries(rawModules)) {
+    if (!content || !filteredPaths.has(path)) continue
     const cjk = (content.match(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/g) || []).length
     const words = (content.match(/[a-zA-Z]+/g) || []).length
     totalChars += cjk + words
@@ -164,14 +192,14 @@ const radarDimensions = computed(() => {
 </script>
 
 <div class="home-layout">
-  <div class="home-left">
-    <CategoryCard :categories="categories" />
-    <TagCard :tags="tags" />
-    <Music ref="musicRef"/>
-    <RadarChart :dimensions="radarDimensions" />
-  </div>
   <div class="home-right">
-    <PostList :posts="posts" />
+    <CategoryCard
+      :categories="categories"
+      :total="posts.length"
+      :selected-category="selectedCategory"
+      @update:selected-category="selectedCategory = $event"
+    />
+    <PostList :posts="filteredPosts" />
   </div>
 </div>
 
@@ -181,13 +209,6 @@ const radarDimensions = computed(() => {
   gap: 10px;
   align-items: flex-start;
 }
-.home-left {
-  width: 280px;
-  flex: 0 0 220px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
 .home-right {
   flex: 1;
   min-width: 0;
@@ -195,13 +216,6 @@ const radarDimensions = computed(() => {
 @media (max-width: 768px) {
   .home-layout {
     flex-direction: column;
-  }
-  .home-left {
-    display: none;
-  }
-  .home-right {
-    width: 100%;
-    min-width: none;
   }
 }
 </style>

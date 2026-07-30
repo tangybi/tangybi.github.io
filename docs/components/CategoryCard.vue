@@ -1,113 +1,111 @@
 <template>
-  <div class="category-card">
-    <div class="card-header">
-      <span class="accent-bar"></span>
-      <h3 class="card-title">分类</h3>
+  <div class="category-bar">
+    <div class="category-header">
+      <h3 class="category-title">分类</h3>
+      <span class="category-count">{{ total }} 篇 · 持续更新</span>
     </div>
-    <ul class="category-list">
-      <li v-for="cat in visibleCategories" :key="cat.name" class="category-item">
-        <span class="cat-name">{{ cat.name }}</span>
-        <span class="cat-count">{{ cat.count }}</span>
-      </li>
-    </ul>
-    <button v-if="categories.length > maxVisible" class="more-btn" @click="$emit('more')">
-      ... 更多
-    </button>
+    <div class="category-filters">
+      <button
+        class="filter-pill"
+        :class="{ active: selectedCategory === '' }"
+        @click="$emit('update:selectedCategory', '')"
+      >全部</button>
+      <button
+        v-for="cat in categories"
+        :key="cat.name"
+        class="filter-pill"
+        :class="{ active: selectedCategory === cat.name }"
+        @click="$emit('update:selectedCategory', cat.name)"
+      >
+        {{ cat.name }}
+        <span class="pill-count">{{ cat.count }}</span>
+      </button>
+    </div>
+    <div class="category-divider"></div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-
-const props = defineProps({
+defineProps({
   categories: {
     type: Array,
     default: () => [],
   },
-  maxVisible: {
+  total: {
     type: Number,
-    default: 5,
+    default: 0,
+  },
+  selectedCategory: {
+    type: String,
+    default: '',
   },
 })
 
-defineEmits(['more'])
-
-const visibleCategories = computed(() =>
-  props.categories.slice(0, props.maxVisible)
-)
+defineEmits(['update:selectedCategory'])
 </script>
 
 <style scoped>
-.category-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 2px 8px var(--card-shadow);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+.category-bar {
+  margin-bottom: 8px;
 }
-.card-header {
+.category-header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
-.accent-bar {
-  width: 4px;
-  height: 18px;
-  background: var(--accent);
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-.card-title {
+.category-title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
+  line-height: 1.3;
 }
-.category-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.category-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  cursor: pointer;
-  transition: color 0.15s;
-}
-.category-item:hover .cat-name {
-  color: var(--accent);
-}
-.category-item + .category-item {
-  border-top: 1px solid var(--border-color);
-}
-.cat-name {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  transition: color 0.15s;
-}
-.cat-count {
-  background: var(--accent-soft);
-  color: var(--accent-dark);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 12px;
-  line-height: 1.4;
-}
-.more-btn {
-  background: none;
-  border: none;
-  color: var(--accent);
+.category-count {
   font-size: 0.82rem;
-  cursor: pointer;
-  padding: 8px 0 0;
-  display: block;
-  transition: opacity 0.15s;
+  color: var(--text-dim);
 }
-.more-btn:hover {
-  opacity: 0.7;
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-secondary);
+  background: transparent;
+  font-family: inherit;
+}
+.filter-pill:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.filter-pill.active {
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+}
+.pill-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.6;
+}
+.filter-pill.active .pill-count {
+  opacity: 0.8;
+}
+.category-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin-bottom: 4px;
 }
 </style>

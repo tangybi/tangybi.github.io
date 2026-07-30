@@ -16,7 +16,7 @@
           <polygon
             :points="gridPoints(level / levels)"
             fill="none"
-            stroke="#ddd"
+            :stroke="radarGridColor"
             stroke-width="1"
             class="grid-polygon"
           />
@@ -43,14 +43,14 @@
           :y="axisLabelPos(i).y"
           :text-anchor="'middle'"
           font-size="10"
-          fill="#666"
+          :fill="radarLabelColor"
           dy="2.5"
         >{{ dim.label }}: {{ dim.value }}{{ dim.weights }}</text>
         <!-- 数据多边形 -->
         <polygon
           :points="dataPoints"
-          fill="rgba(123, 198, 126, 0.25)"
-          stroke="#7bc67e"
+          fill="rgba(167, 139, 250, 0.25)"
+          stroke="#a78bfa"
           stroke-width="2"
           class="data-polygon"
         />
@@ -71,7 +71,7 @@
             :cx="pt.x"
             :cy="pt.y"
             r="3.5"
-            fill="#7bc67e"
+            fill="#a78bfa"
             stroke="#fff"
             stroke-width="1.5"
             class="data-point-dot"
@@ -117,6 +117,14 @@ const cy = computed(() => props.size / 2)
 const radius = computed(() => props.size / 2 - 20)
 const levels = 5 // 5 层网格
 
+// 从 CSS 变量读取颜色（兼容 SSR，提供 fallback）
+function getCSSVar(name, fallback) {
+  if (typeof document === 'undefined') return fallback
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+}
+const radarGridColor = computed(() => getCSSVar('--radar-grid', '#ddd'))
+const radarLabelColor = computed(() => getCSSVar('--radar-label', '#666'))
+
 function pointOnAxis(index, ratio) {
   const angle = (Math.PI * 2 * index) / props.dimensions.length - Math.PI / 2
   return {
@@ -145,8 +153,8 @@ const dataPoints = computed(() =>
   dataPointCoords.value.map((pt) => `${pt.x},${pt.y}`).join(' ')
 )
 
-// 轴线颜色配置
-const axisColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#a29bfe', '#fd79a8']
+// 轴线颜色配置（浅紫色系为主）
+const axisColors = ['#a78bfa', '#c4b5fd', '#8b5cf6', '#b39ddb', '#e0b0ff', '#d8b4fe', '#a29bfe', '#f0abfc']
 
 // 轴标签位置（沿轴线放在数据点与外网格之间）
 function axisLabelPos(index) {
