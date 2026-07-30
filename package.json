@@ -9,8 +9,5 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "newpost": "python scripts/newpost.py"
-  },
-  "dependencies": {
-    "mermaid": "^11.15.0"
   }
 }
