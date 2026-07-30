@@ -8,7 +8,6 @@ import CategoryCard from '../../components/CategoryCard.vue'
 import TagCard from '../../components/TagCard.vue'
 import PostList from '../../components/PostList.vue'
 import RadarChart from '../../components/RadarChart.vue'
-import MermaidBlock from './components/MermaidBlock.vue'
 
 export default {
   extends: DefaultTheme,
@@ -19,6 +18,5 @@ export default {
     app.component('TagCard', TagCard)
     app.component('PostList', PostList)
     app.component('RadarChart', RadarChart)
-    app.component('MermaidBlock', MermaidBlock)
   }
 } satisfies Theme
