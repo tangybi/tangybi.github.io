@@ -11,11 +11,11 @@
 
 /* ===== 自定义组件 CSS 变量 ===== */
 :root {
-  /* 页面整体底色（暖白奶油色） */
-  --vp-c-bg: rgb(247, 243, 238);
-  --vp-c-bg-alt: rgb(242, 238, 233);
-  --vp-c-bg-elv: rgb(250, 247, 242);
-  --vp-c-bg-soft: rgb(250, 247, 242);
+  /* 页面整体底色（纯白） */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #ffffff;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-bg-soft: #ffffff;
 
   /* 卡片背景 */
   --card-bg: #f5f3ff;

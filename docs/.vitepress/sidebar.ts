@@ -6,6 +6,7 @@ export const sidebar: DefaultTheme.SidebarItem[] = [
     items: [
       { text: '归并排序', link: '/docs/DSA/merge-sort' },
       { text: 'H100', link: '/docs/DSA/H100' },
+      { text: 'redis', link: '/docs/408/redis'}
     ]
   },
 ]
